@@ -36,6 +36,7 @@ export default function AlertForm() {
       setEmail('')
       setReferenceNumber('')
       setMaxPrice('')
+      setOpen(false)
     } catch (err) {
       setStatus('error')
       setErrorMsg(err instanceof Error ? err.message : 'Er is een fout opgetreden')
@@ -43,98 +44,82 @@ export default function AlertForm() {
   }
 
   return (
-    <section className="bg-stone-50 border-b border-stone-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-8">
-        {/* Collapsed trigger */}
-        {!open && status !== 'success' && (
-          <div className="py-4 flex items-center justify-between">
-            <div>
-              <span className="text-sm text-stone-700 font-medium">Prijsalert instellen</span>
-              <span className="hidden sm:inline text-sm text-stone-400 ml-2">
-                — ontvang een e-mail zodra een deal onder marktprijs verschijnt
+    <div>
+      {/* Thin strip */}
+      <div className="bg-[#14532D]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-3 flex items-center justify-between gap-4">
+          {status === 'success' ? (
+            <span className="text-emerald-200 text-sm">✓ Alert ingesteld — je ontvangt een e-mail zodra er een deal is.</span>
+          ) : (
+            <>
+              <span className="text-white/80 text-sm">
+                Stel een prijsalert in{' '}
+                <span className="hidden sm:inline text-white/40">
+                  — ontvang een e-mail zodra een deal onder marktprijs verschijnt
+                </span>
               </span>
-            </div>
-            <button
-              onClick={() => setOpen(true)}
-              className="text-sm bg-green-800 text-white px-4 py-1.5 font-medium hover:bg-green-900 transition-colors shrink-0"
-            >
-              Alert instellen
-            </button>
-          </div>
-        )}
-
-        {/* Success state */}
-        {status === 'success' && (
-          <div className="py-4 flex items-center gap-3">
-            <span className="text-green-700 text-sm font-medium">✓ Alert ingesteld</span>
-            <span className="text-stone-400 text-sm">We sturen je een bericht zodra er een deal is.</span>
-          </div>
-        )}
-
-        {/* Expanded form */}
-        {open && status !== 'success' && (
-          <div className="py-5">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <p className="text-sm font-semibold text-stone-900">Prijsalert instellen</p>
-                <p className="text-xs text-stone-400 mt-0.5">Ontvang een e-mail zodra een deal onder marktprijs verschijnt</p>
-              </div>
               <button
-                type="button"
-                onClick={() => setOpen(false)}
-                className="text-stone-400 hover:text-stone-600 text-sm transition-colors"
+                onClick={() => setOpen(v => !v)}
+                className="shrink-0 text-sm text-white border border-white/30 px-4 py-1.5 hover:border-white/60 hover:bg-white/10 transition-colors whitespace-nowrap"
               >
-                Sluiten
+                {open ? 'Sluiten' : 'Alert instellen →'}
               </button>
-            </div>
+            </>
+          )}
+        </div>
+      </div>
 
-            <form onSubmit={handleSubmit} className="flex flex-wrap gap-3 items-end">
+      {/* Expanded form — slides in below strip */}
+      {open && status !== 'success' && (
+        <div className="bg-[#0f3d20] border-b border-[#14532D]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-8 py-6">
+            <form onSubmit={handleSubmit} className="flex flex-wrap gap-4 items-end">
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs text-stone-500 font-medium">E-mail *</label>
+                <label className="text-[10px] text-white/50 uppercase tracking-widest font-medium">E-mail *</label>
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="jouw@email.nl"
-                  className="border border-stone-200 bg-white text-sm px-3 py-2 text-stone-900 placeholder-stone-300 focus:outline-none focus:border-green-800 focus:ring-1 focus:ring-green-800/20 w-48 transition-colors"
+                  className="bg-white/10 border border-white/20 text-sm px-3 py-2 text-white placeholder-white/30 focus:outline-none focus:border-white/50 w-52 transition-colors"
                 />
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs text-stone-500 font-medium">Merk *</label>
+                <label className="text-[10px] text-white/50 uppercase tracking-widest font-medium">Merk *</label>
                 <input
                   type="text"
                   required
                   value={brand}
                   onChange={e => setBrand(e.target.value)}
                   placeholder="Rolex"
-                  className="border border-stone-200 bg-white text-sm px-3 py-2 text-stone-900 placeholder-stone-300 focus:outline-none focus:border-green-800 focus:ring-1 focus:ring-green-800/20 w-32 transition-colors"
+                  className="bg-white/10 border border-white/20 text-sm px-3 py-2 text-white placeholder-white/30 focus:outline-none focus:border-white/50 w-32 transition-colors"
                 />
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs text-stone-500 font-medium">Referentienummer</label>
+                <label className="text-[10px] text-white/50 uppercase tracking-widest font-medium">Referentie</label>
                 <input
                   type="text"
                   value={referenceNumber}
                   onChange={e => setReferenceNumber(e.target.value)}
                   placeholder="126610LN"
-                  className="border border-stone-200 bg-white text-sm px-3 py-2 text-stone-900 placeholder-stone-300 focus:outline-none focus:border-green-800 focus:ring-1 focus:ring-green-800/20 w-36 transition-colors"
+                  className="bg-white/10 border border-white/20 text-sm px-3 py-2 text-white placeholder-white/30 focus:outline-none focus:border-white/50 w-36 transition-colors"
                 />
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs text-stone-500 font-medium">Max. prijs</label>
+                <label className="text-[10px] text-white/50 uppercase tracking-widest font-medium">Max. prijs</label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm select-none">€</span>
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40 text-sm select-none">€</span>
                   <input
                     type="number"
                     value={maxPrice}
                     onChange={e => setMaxPrice(e.target.value)}
                     placeholder="15.000"
                     min="0"
-                    className="border border-stone-200 bg-white text-sm pl-7 pr-3 py-2 text-stone-900 placeholder-stone-300 focus:outline-none focus:border-green-800 focus:ring-1 focus:ring-green-800/20 w-32 transition-colors"
+                    className="bg-white/10 border border-white/20 text-sm pl-7 pr-3 py-2 text-white placeholder-white/30 focus:outline-none focus:border-white/50 w-32 transition-colors"
                   />
                 </div>
               </div>
@@ -142,18 +127,18 @@ export default function AlertForm() {
               <button
                 type="submit"
                 disabled={status === 'loading'}
-                className="bg-green-800 hover:bg-green-900 text-white text-sm px-6 py-2 font-medium transition-colors disabled:opacity-50 whitespace-nowrap"
+                className="bg-emerald-600 hover:bg-emerald-500 text-white text-sm px-6 py-2 font-medium transition-colors disabled:opacity-50 whitespace-nowrap"
               >
                 {status === 'loading' ? 'Bezig...' : 'Alert instellen'}
               </button>
 
               {status === 'error' && (
-                <p className="w-full text-xs text-red-500 -mt-1">{errorMsg}</p>
+                <p className="w-full text-xs text-red-300 -mt-2">{errorMsg}</p>
               )}
             </form>
           </div>
-        )}
-      </div>
-    </section>
+        </div>
+      )}
+    </div>
   )
 }

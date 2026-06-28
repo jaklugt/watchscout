@@ -30,6 +30,7 @@ const CONDITION_NL: Record<string, string> = {
   fair: 'Gebruikt',
   used: 'Gebruikt',
   vintage: 'Gebruikt',
+  'pre-owned': 'Tweedehands',
 }
 
 type AccessoriesFilter = '' | 'none' | 'box' | 'papers' | 'full'
@@ -41,8 +42,8 @@ function fmt(price: number) {
 
 function ChevronIcon() {
   return (
-    <svg className="w-3.5 h-3.5 text-stone-400 pointer-events-none shrink-0" fill="none"
-      stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+    <svg className="w-3 h-3 text-stone-400 pointer-events-none shrink-0" fill="none"
+      stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
     </svg>
   )
@@ -57,13 +58,13 @@ function FilterSelect({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex flex-col gap-1">
-      <label className="text-[10px] text-stone-400 uppercase tracking-wider font-medium">{label}</label>
+    <div className="flex flex-col gap-1.5">
+      <label className="text-[9px] text-stone-400 uppercase tracking-[0.18em] font-medium">{label}</label>
       <div className="relative">
         <select
           value={value}
           onChange={e => onChange(e.target.value)}
-          className="appearance-none border border-stone-200 bg-white text-sm pl-3 pr-8 py-2 text-stone-800 focus:outline-none focus:border-green-800 focus:ring-1 focus:ring-green-800/10 cursor-pointer min-w-[140px] transition-colors"
+          className="appearance-none bg-white border border-stone-200 text-[13px] pl-3 pr-7 py-2 text-stone-700 focus:outline-none focus:border-stone-400 cursor-pointer min-w-[130px] transition-colors"
         >
           {children}
         </select>
@@ -83,69 +84,89 @@ function WatchCard({ w }: { w: Watch }) {
       : null
 
   return (
-    <article className="bg-white border border-stone-100 flex flex-col group hover:border-stone-300 hover:shadow-lg transition-all duration-200">
+    <article className="bg-white flex flex-col group hover:shadow-xl transition-shadow duration-300">
+      {/* Image */}
       <a href={w.url} target="_blank" rel="noopener noreferrer"
-        className="block overflow-hidden aspect-square bg-stone-50 relative">
+        className="block overflow-hidden aspect-square bg-[#F8F8F6] relative">
         {w.image_url ? (
           <img
             src={w.image_url}
             alt={w.title}
-            className="w-full h-full object-contain p-6 group-hover:scale-[1.04] transition-transform duration-300"
+            className="w-full h-full object-contain p-7 group-hover:scale-[1.04] transition-transform duration-500 ease-out"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-stone-200 text-5xl select-none">◯</div>
         )}
       </a>
 
-      <div className="p-5 flex flex-col gap-3 flex-1">
-        <div>
-          <p className="text-[9px] text-stone-400 tracking-[0.15em] uppercase mb-1.5 font-medium">{w.source}</p>
-          <a
-            href={w.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-medium text-stone-900 leading-snug hover:text-green-800 transition-colors line-clamp-2 text-[0.875rem]"
-          >
-            {w.title}
-          </a>
-          {w.reference_number && (
-            <p className="text-[11px] text-stone-400 mt-1 font-mono">Ref. {w.reference_number}</p>
-          )}
-        </div>
+      {/* Content */}
+      <div className="px-5 pt-4 pb-5 flex flex-col flex-1">
+        {/* Source */}
+        <p className="text-[9px] text-stone-400 tracking-[0.18em] uppercase mb-2 font-medium">{w.source}</p>
 
-        {(conditionLabel || w.has_papers || w.has_box || w.has_service_history) && (
-          <div className="flex gap-1.5 flex-wrap">
+        {/* Title */}
+        <a
+          href={w.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[0.875rem] font-medium text-stone-900 leading-snug hover:text-[#14532D] transition-colors line-clamp-2 mb-1"
+        >
+          {w.title}
+        </a>
+
+        {/* Reference */}
+        {w.reference_number && (
+          <p className="text-[11px] text-stone-400 font-mono mb-3">Ref. {w.reference_number}</p>
+        )}
+
+        {/* Badges */}
+        {(conditionLabel || w.has_papers || w.has_box) && (
+          <div className="flex gap-1 flex-wrap mb-3">
             {conditionLabel && (
-              <span className="text-[10px] border border-stone-200 text-stone-500 px-2 py-0.5 tracking-wide">
+              <span className="text-[9px] text-stone-400 border border-stone-200 px-1.5 py-0.5 tracking-wide">
                 {conditionLabel}
               </span>
             )}
             {w.has_papers && (
-              <span className="text-[10px] border border-stone-200 text-stone-500 px-2 py-0.5">Papieren</span>
+              <span className="text-[9px] text-stone-400 border border-stone-200 px-1.5 py-0.5">Papieren</span>
             )}
             {w.has_box && (
-              <span className="text-[10px] border border-stone-200 text-stone-500 px-2 py-0.5">Doos</span>
+              <span className="text-[9px] text-stone-400 border border-stone-200 px-1.5 py-0.5">Doos</span>
             )}
             {w.has_service_history && (
-              <span className="text-[10px] border border-stone-200 text-stone-500 px-2 py-0.5">Service</span>
+              <span className="text-[9px] text-stone-400 border border-stone-200 px-1.5 py-0.5">Service</span>
             )}
           </div>
         )}
 
+        {/* Price block — pushed to bottom */}
         <div className="mt-auto pt-3 border-t border-stone-100">
           {w.price ? (
-            <p className="text-xl font-semibold text-stone-900 tracking-tight">{fmt(w.price)}</p>
+            <p className="text-lg font-semibold text-stone-900 tracking-tight leading-none">{fmt(w.price)}</p>
           ) : (
             <p className="text-sm text-stone-400 italic">Prijs op aanvraag</p>
           )}
+
           {savings ? (
-            <p className="text-[11px] text-green-700 font-semibold mt-0.5">
+            <p className="text-[11px] text-[#14532D] font-medium mt-1">
               ↓ {fmt(savings)} onder marktprijs
             </p>
           ) : w.market_avg_price ? (
-            <p className="text-[11px] text-stone-400 mt-0.5">Marktgemiddelde: {fmt(w.market_avg_price)}</p>
+            <p className="text-[11px] text-stone-400 mt-1">Marktgem. {fmt(w.market_avg_price)}</p>
           ) : null}
-          {w.year && <p className="text-[11px] text-stone-400 mt-1">{w.year}</p>}
+
+          {w.year && !savings && !w.market_avg_price && (
+            <p className="text-[11px] text-stone-400 mt-1">{w.year}</p>
+          )}
+
+          <a
+            href={w.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block mt-3 text-[11px] text-stone-400 hover:text-[#14532D] transition-colors tracking-wide"
+          >
+            Bekijk →
+          </a>
         </div>
       </div>
     </article>
@@ -216,14 +237,14 @@ export default function WatchGrid({ watches }: { watches: Watch[] }) {
 
   function resetPage() { setPage(1) }
 
-  const hasActiveFilters = brand || condition || accessories || minPrice || maxPrice || yearFrom || yearTo
+  const hasActiveFilters = !!(brand || condition || accessories || minPrice || maxPrice || yearFrom || yearTo)
 
   return (
     <div>
       {/* Filter bar */}
-      <div className="border-b border-stone-100 bg-white py-4 sticky top-14 z-10 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-8">
-          <div className="flex flex-wrap gap-4 items-end">
+      <div className="bg-[#F8F8F6] border-b border-stone-200 sticky top-14 z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-4">
+          <div className="flex flex-wrap gap-3 items-end">
             <FilterSelect value={brand} onChange={v => { setBrand(v); resetPage() }} label="Merk">
               <option value="">Alle merken</option>
               {brands.map(b => <option key={b} value={b}>{b}</option>)}
@@ -239,49 +260,49 @@ export default function WatchGrid({ watches }: { watches: Watch[] }) {
               <option value="none">Alleen horloge</option>
               <option value="box">Met doos</option>
               <option value="papers">Met papieren</option>
-              <option value="full">Volledige set (doos + papieren)</option>
+              <option value="full">Volledige set</option>
             </FilterSelect>
 
             {hasYearData && (
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] text-stone-400 uppercase tracking-wider font-medium">Bouwjaar</label>
-                <div className="flex items-center gap-2">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[9px] text-stone-400 uppercase tracking-[0.18em] font-medium">Bouwjaar</label>
+                <div className="flex items-center gap-1.5">
                   <input
                     type="number"
                     placeholder="Van"
                     value={yearFrom}
                     onChange={e => { setYearFrom(e.target.value); resetPage() }}
-                    className="border border-stone-200 bg-white text-sm px-3 py-2 w-20 text-stone-800 focus:outline-none focus:border-green-800 focus:ring-1 focus:ring-green-800/10 transition-colors"
+                    className="bg-white border border-stone-200 text-[13px] px-3 py-2 w-20 text-stone-700 focus:outline-none focus:border-stone-400 transition-colors"
                   />
-                  <span className="text-stone-300 text-sm">–</span>
+                  <span className="text-stone-300 text-xs">–</span>
                   <input
                     type="number"
                     placeholder="Tot"
                     value={yearTo}
                     onChange={e => { setYearTo(e.target.value); resetPage() }}
-                    className="border border-stone-200 bg-white text-sm px-3 py-2 w-20 text-stone-800 focus:outline-none focus:border-green-800 focus:ring-1 focus:ring-green-800/10 transition-colors"
+                    className="bg-white border border-stone-200 text-[13px] px-3 py-2 w-20 text-stone-700 focus:outline-none focus:border-stone-400 transition-colors"
                   />
                 </div>
               </div>
             )}
 
-            <div className="flex flex-col gap-1">
-              <label className="text-[10px] text-stone-400 uppercase tracking-wider font-medium">Prijs</label>
-              <div className="flex items-center gap-2">
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[9px] text-stone-400 uppercase tracking-[0.18em] font-medium">Prijs</label>
+              <div className="flex items-center gap-1.5">
                 <input
                   type="number"
                   placeholder="Min €"
                   value={minPrice}
                   onChange={e => { setMinPrice(e.target.value); resetPage() }}
-                  className="border border-stone-200 bg-white text-sm px-3 py-2 w-24 text-stone-800 focus:outline-none focus:border-green-800 focus:ring-1 focus:ring-green-800/10 transition-colors"
+                  className="bg-white border border-stone-200 text-[13px] px-3 py-2 w-24 text-stone-700 focus:outline-none focus:border-stone-400 transition-colors"
                 />
-                <span className="text-stone-300 text-sm">–</span>
+                <span className="text-stone-300 text-xs">–</span>
                 <input
                   type="number"
                   placeholder="Max €"
                   value={maxPrice}
                   onChange={e => { setMaxPrice(e.target.value); resetPage() }}
-                  className="border border-stone-200 bg-white text-sm px-3 py-2 w-24 text-stone-800 focus:outline-none focus:border-green-800 focus:ring-1 focus:ring-green-800/10 transition-colors"
+                  className="bg-white border border-stone-200 text-[13px] px-3 py-2 w-24 text-stone-700 focus:outline-none focus:border-stone-400 transition-colors"
                 />
               </div>
             </div>
@@ -296,41 +317,38 @@ export default function WatchGrid({ watches }: { watches: Watch[] }) {
             </div>
           </div>
 
-          {hasActiveFilters && (
-            <button
-              onClick={() => {
-                setBrand(''); setCondition(''); setAccessories(''); setMinPrice('')
-                setMaxPrice(''); setYearFrom(''); setYearTo(''); resetPage()
-              }}
-              className="mt-3 text-xs text-stone-400 hover:text-green-800 transition-colors underline"
-            >
-              Filters wissen
-            </button>
-          )}
+          {/* Results row */}
+          <div className="mt-3 flex items-center gap-4">
+            <p className="text-[12px] text-stone-500">
+              <span className="font-medium text-stone-800">{filtered.length}</span> horloges
+              {dealsCount > 0 && (
+                <> · <span className="text-[#14532D] font-medium">{dealsCount} onder marktprijs</span></>
+              )}
+            </p>
+            {hasActiveFilters && (
+              <button
+                onClick={() => {
+                  setBrand(''); setCondition(''); setAccessories(''); setMinPrice('')
+                  setMaxPrice(''); setYearFrom(''); setYearTo(''); resetPage()
+                }}
+                className="text-[11px] text-stone-400 hover:text-stone-700 underline underline-offset-2 transition-colors"
+              >
+                Filters wissen
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Results summary */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-4">
-        <p className="text-sm text-stone-500">
-          <span className="font-semibold text-stone-900">{filtered.length}</span> horloges gevonden
-          {dealsCount > 0 && (
-            <> ·{' '}
-              <span className="text-green-700 font-semibold">{dealsCount} onder marktprijs</span>
-            </>
-          )}
-        </p>
-      </div>
-
       {/* Watch grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 pb-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-8 pb-16">
         {filtered.length === 0 ? (
-          <div className="text-center py-28 text-stone-400">
-            <p className="text-base">Geen horloges gevonden</p>
-            <p className="text-sm mt-1">Pas de filters aan om meer resultaten te zien</p>
+          <div className="text-center py-32 text-stone-400">
+            <p className="font-serif text-xl mb-2">Geen horloges gevonden</p>
+            <p className="text-sm">Pas de filters aan om meer resultaten te zien</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
             {pageItems.map(w => <WatchCard key={w.id} w={w} />)}
           </div>
         )}
@@ -338,26 +356,25 @@ export default function WatchGrid({ watches }: { watches: Watch[] }) {
 
       {/* Pagination */}
       {filtered.length > 0 && (
-        <div className="border-t border-stone-100 bg-stone-50/80">
+        <div className="border-t border-stone-200 bg-[#F8F8F6]">
           <div className="max-w-7xl mx-auto px-4 sm:px-8 py-5 flex flex-wrap items-center gap-4">
             <div className="flex items-center gap-2">
               <button
                 onClick={() => goTo(safePage - 1)}
                 disabled={safePage <= 1}
-                className="border border-stone-200 bg-white text-sm px-4 py-2 text-stone-600 hover:border-stone-400 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                className="bg-white border border-stone-200 text-[13px] px-4 py-2 text-stone-600 hover:border-stone-400 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
               >
                 ← Vorige
               </button>
-              <span className="text-sm text-stone-500 px-3 whitespace-nowrap">
-                Pagina{' '}
-                <span className="font-semibold text-stone-900">{safePage}</span>
-                {' '}van{' '}
-                <span className="font-semibold text-stone-900">{totalPages}</span>
+              <span className="text-[13px] text-stone-500 px-3 whitespace-nowrap">
+                <span className="font-medium text-stone-900">{safePage}</span>
+                <span className="text-stone-300"> / </span>
+                <span className="font-medium text-stone-900">{totalPages}</span>
               </span>
               <button
                 onClick={() => goTo(safePage + 1)}
                 disabled={safePage >= totalPages}
-                className="border border-stone-200 bg-white text-sm px-4 py-2 text-stone-600 hover:border-stone-400 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                className="bg-white border border-stone-200 text-[13px] px-4 py-2 text-stone-600 hover:border-stone-400 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
               >
                 Volgende →
               </button>
@@ -372,7 +389,7 @@ export default function WatchGrid({ watches }: { watches: Watch[] }) {
               }}
               className="flex items-center gap-2"
             >
-              <label className="text-xs text-stone-400 whitespace-nowrap">Ga naar</label>
+              <label className="text-[11px] text-stone-400 whitespace-nowrap">Ga naar</label>
               <input
                 type="number"
                 min={1}
@@ -380,25 +397,25 @@ export default function WatchGrid({ watches }: { watches: Watch[] }) {
                 value={jumpInput}
                 onChange={e => setJumpInput(e.target.value)}
                 placeholder={String(safePage)}
-                className="border border-stone-200 bg-white text-sm px-2 py-2 w-16 text-stone-800 focus:outline-none focus:border-green-800 text-center transition-colors"
+                className="bg-white border border-stone-200 text-[13px] px-2 py-2 w-16 text-stone-700 focus:outline-none focus:border-stone-400 text-center transition-colors"
               />
               <button
                 type="submit"
-                className="border border-stone-200 bg-white text-sm px-3 py-2 text-stone-600 hover:border-stone-400 transition-colors"
+                className="bg-white border border-stone-200 text-[13px] px-3 py-2 text-stone-600 hover:border-stone-400 transition-colors"
               >
                 Ga
               </button>
             </form>
 
             <div className="flex items-center gap-2 ml-auto">
-              <span className="text-xs text-stone-400 whitespace-nowrap">Per pagina</span>
+              <span className="text-[11px] text-stone-400 whitespace-nowrap">Per pagina</span>
               {[30, 50, 100].map(n => (
                 <button
                   key={n}
                   onClick={() => { setPerPage(n); resetPage() }}
-                  className={`text-sm px-3 py-2 border transition-colors ${
+                  className={`text-[13px] px-3 py-2 border transition-colors ${
                     perPage === n
-                      ? 'bg-green-800 text-white border-green-800'
+                      ? 'bg-[#0A1628] text-white border-[#0A1628]'
                       : 'bg-white text-stone-600 border-stone-200 hover:border-stone-400'
                   }`}
                 >

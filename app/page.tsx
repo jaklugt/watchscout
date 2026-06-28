@@ -30,74 +30,91 @@ export default async function Home({
     return terms.every(t => title.includes(t) || ref.includes(t))
   })
 
+  const totalWatches = allWatches?.length ?? 0
+  const totalSources = new Set((allWatches ?? []).map(w => w.source)).size
+  const dealsTotal = (allWatches ?? []).filter(w => (w.deal_score ?? 0) > 0).length
+
   return (
-    <div className="min-h-screen bg-white">
-      {/* Header */}
-      <header className="border-b border-stone-100 bg-white sticky top-0 z-20">
+    <div className="min-h-screen">
+      {/* Header — dark navy, sticky */}
+      <header className="bg-[#0A1628] sticky top-0 z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <a href="/" className="flex items-center gap-2.5">
-              <div className="w-2 h-2 rounded-full bg-green-700 shrink-0" />
-              <span className="font-semibold tracking-tight text-stone-900 text-[1.05rem]">WatchScout</span>
-            </a>
-            <span className="hidden sm:block text-xs text-stone-300 tracking-widest uppercase border-l border-stone-100 pl-3">
-              Rolex dealfinder
+          <a href="/" className="flex items-center gap-4">
+            <span className="font-serif text-white text-xl tracking-tight">WatchScout</span>
+            <span className="hidden sm:block text-[10px] text-white/40 tracking-[0.2em] uppercase border-l border-white/10 pl-4">
+              Rolex Dealfinder
             </span>
-          </div>
-          <p className="text-xs text-stone-400 tabular-nums">
-            {allWatches?.length ?? 0} horloges gescand
-          </p>
+          </a>
+          <span className="text-[11px] text-white/40 tabular-nums">
+            {totalWatches} horloges
+          </span>
         </div>
       </header>
 
-      <main>
-        {/* Search */}
-        <div className="border-b border-stone-100 bg-white py-5">
-          <div className="max-w-7xl mx-auto px-4 sm:px-8">
-            <form method="GET" action="">
-              <div className="relative max-w-2xl">
-                <svg
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-300 w-4 h-4 pointer-events-none"
-                  fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round"
-                    d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
-                </svg>
-                <input
-                  type="text"
-                  name="search"
-                  defaultValue={search ?? ''}
-                  placeholder="Zoek op model of referentienummer — bijv. Datejust, Submariner 126610LN"
-                  className="w-full border border-stone-200 bg-white text-sm pl-11 pr-28 py-3 text-stone-900 placeholder-stone-300 focus:outline-none focus:border-green-800 focus:ring-1 focus:ring-green-800/10 transition-colors"
-                  autoComplete="off"
-                />
-                <button
-                  type="submit"
-                  className="absolute right-0 top-0 bottom-0 px-5 bg-green-800 text-white text-sm font-medium hover:bg-green-900 transition-colors"
-                >
-                  Zoeken
-                </button>
-              </div>
-              {q && (
-                <div className="mt-2.5 flex items-center gap-3 max-w-2xl">
-                  <span className="text-sm text-stone-600">
-                    <span className="font-medium">{watches.length}</span> resultaten voor{' '}
-                    <span className="font-medium">&ldquo;{search}&rdquo;</span>
-                    <span className="text-stone-400"> van {allWatches?.length ?? 0} horloges</span>
-                  </span>
-                  <a
-                    href="/"
-                    className="text-xs text-stone-400 hover:text-green-800 underline underline-offset-2 transition-colors whitespace-nowrap"
-                  >
-                    Wis zoekopdracht
-                  </a>
-                </div>
-              )}
-            </form>
-          </div>
-        </div>
+      {/* Hero — dark navy with full-bleed watch photo */}
+      <section
+        className="relative pb-10 pt-8 bg-[#0A1628]"
+        style={{
+          backgroundImage: 'url(https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=1920&q=80)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-[#0A1628]/70 pointer-events-none" />
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8">
+          <h1 className="font-serif text-white text-2xl sm:text-3xl lg:text-4xl font-medium leading-tight mb-2">
+            Vind de beste Rolex deal<br className="hidden sm:block" /> in Nederland
+          </h1>
+          <p className="text-white/50 text-sm mb-8 tracking-wide">
+            {totalWatches} horloges gescand bij {totalSources} dealers
+            {dealsTotal > 0 && (
+              <> · <span className="text-emerald-400">{dealsTotal} onder marktprijs</span></>
+            )}
+          </p>
 
-        {/* Prijsalert */}
+          {/* Search bar */}
+          <form method="GET" action="">
+            <div className="relative max-w-2xl">
+              <svg
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 w-4 h-4 pointer-events-none"
+                fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round"
+                  d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
+              </svg>
+              <input
+                type="text"
+                name="search"
+                defaultValue={search ?? ''}
+                placeholder="Zoek op model of referentienummer — bijv. Datejust, Submariner 126610LN"
+                className="w-full bg-white/10 border border-white/15 text-sm pl-11 pr-28 py-3.5 text-white placeholder-white/30 focus:outline-none focus:border-white/40 focus:bg-white/15 transition-colors"
+                autoComplete="off"
+              />
+              <button
+                type="submit"
+                className="absolute right-0 top-0 bottom-0 px-5 bg-[#14532D] text-white text-sm font-medium hover:bg-[#166534] transition-colors"
+              >
+                Zoeken
+              </button>
+            </div>
+            {q && (
+              <div className="mt-3 flex items-center gap-3 max-w-2xl">
+                <span className="text-sm text-white/60">
+                  <span className="text-white font-medium">{watches.length}</span> resultaten voor{' '}
+                  <span className="text-white">&ldquo;{search}&rdquo;</span>
+                </span>
+                <a href="/" className="text-xs text-white/40 hover:text-white/70 underline underline-offset-2 transition-colors">
+                  Wis zoekopdracht
+                </a>
+              </div>
+            )}
+          </form>
+        </div>
+      </section>
+
+      <main>
+        {/* Prijsalert strip */}
         <AlertForm />
 
         {/* Watch grid with filters */}
