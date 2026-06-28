@@ -42,7 +42,7 @@ export default async function Home({
           <a href="/" className="flex items-center gap-4">
             <span className="font-serif text-white text-xl tracking-tight">WatchScout</span>
             <span className="hidden sm:block text-[10px] text-white/40 tracking-[0.2em] uppercase border-l border-white/10 pl-4">
-              Rolex Dealfinder
+              Horloge Dealfinder
             </span>
           </a>
           <span className="text-[11px] text-white/40 tabular-nums">
@@ -64,7 +64,7 @@ export default async function Home({
         <div className="absolute inset-0 bg-[#0A1628]/70 pointer-events-none" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8">
           <h1 className="font-serif text-white text-2xl sm:text-3xl lg:text-4xl font-medium leading-tight mb-2">
-            Vind de beste Rolex deal<br className="hidden sm:block" /> in Nederland
+            Vind de beste horloge deal<br className="hidden sm:block" /> in Nederland
           </h1>
           <p className="text-white/50 text-sm mb-8 tracking-wide">
             {totalWatches} horloges gescand bij {totalSources} dealers

@@ -188,7 +188,14 @@ export default function WatchGrid({ watches }: { watches: Watch[] }) {
 
   const hasYearData = watches.some(w => w.year !== null)
 
-  const brands = [...new Set(watches.map(w => w.brand).filter(Boolean))].sort()
+  const BRAND_ORDER = ['Rolex', 'Omega', 'Tudor', 'Patek Philippe', 'Audemars Piguet']
+  const brands = [...new Set(watches.map(w => w.brand).filter(Boolean))].sort((a, b) => {
+    const ia = BRAND_ORDER.indexOf(a), ib = BRAND_ORDER.indexOf(b)
+    if (ia !== -1 && ib !== -1) return ia - ib
+    if (ia !== -1) return -1
+    if (ib !== -1) return 1
+    return a.localeCompare(b)
+  })
   const conditionGroups = [...new Set(
     watches
       .map(w => w.condition ? (CONDITION_NL[w.condition] ?? w.condition) : null)

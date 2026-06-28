@@ -19,8 +19,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "WatchScout — Rolex Dealfinder",
-  description: "Vind de beste Rolex deal in Nederland. AI-powered dealfinder die 322 horloges bij 5 dealers scant.",
+  title: "WatchScout — Horloge Dealfinder",
+  description: "Vind de beste horloge deal in Nederland. AI-powered dealfinder voor Rolex, Omega, Tudor, Patek Philippe en Audemars Piguet.",
 };
 
 export default function RootLayout({
